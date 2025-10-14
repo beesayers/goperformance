@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Performance - Cycling Services for Peak Performance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1a1a1a;
+            --accent-color: rgb(255, 94, 26);
+            --light-bg: #f5f5f5;
+            --text-color: #333;
+            --light-text: #ffffff;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 4vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 70px;
+        }
+
+        .logo {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            text-transform: uppercase;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .cta-button {
+            background: var(--accent-color);
+            color: white;
+            border: 2px solid var(--accent-color);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: transparent;
+            color: var(--accent-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 60vh;
+            min-height: 500px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('https://images.squarespace-cdn.com/content/v1/68ededfb9c81b824c1975681/1726084289.434838-ZLRCAFYTZQQTYZEVAYID/imgg-od3-jfyfarod.png');
+            background-size: cover;
+            background-position: 62% 61%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            color: var(--light-text);
+            max-width: 1200px;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .hero .location {
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: 'Archivo Black', sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 6rem 4vw;
+            background: var(--light-bg);
+        }
+
+        .services h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            font-family: 'Archivo Black', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-icon {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 2rem;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .service-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .service-card h3 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-card .price {
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .service-card ul {
+            list-style: none;
+            padding-left: 0;
+            flex-grow: 1;
+        }
+
+        .service-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .service-card li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 3rem;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        .note strong {
+            color: var(--accent-color);
+            font-style: normal;
+        }
+
+        .note .underline {
+            text-decoration: underline;
+            text-decoration-color: var(--accent-color);
+            text-underline-offset: 3px;
+        }
+
+        /* Schedule Section */
+        .schedule {
+            padding: 6rem 4vw;
+            background: var(--accent-color);
+        }
+
+        .schedule-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .schedule h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .schedule h2 .accent {
+            color: var(--accent-color);
+        }
+
+        .calendar-embed {
+            background: var(--light-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-embed iframe {
+            width: 100%;
+            height: 700px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        /* About Section */
+        .about {
+            padding: 6rem 4vw;
+            background: var(--light-bg);
+            position: relative;
+        }
+
+        .about::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: white;
+            clip-path: polygon(0 100%, 100% 0, 100% 100%);
+        }
+
+        .about-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            border-radius: 20px;
+            overflow: hidden;
+            height: 500px;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .about-content h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .about-content h2 .accent {
+            color: var(--accent-color);
+        }
+
+        .about-content p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .map-container {
+            margin-top: 3rem;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 420px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-color);
+            color: var(--light-text);
+            padding: 4rem 4vw;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .footer-section h3 {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .footer-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .footer-section a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 6vw;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .cta-button {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                min-height: 400px;
+                height: 50vh;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero .location {
+                font-size: 1rem;
+            }
+
+            .services {
+                padding: 4rem 6vw;
+            }
+
+            .services h2 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .service-card {
+                padding: 1.5rem;
+            }
+
+            .service-icon {
+                width: 200px;
+                height: 200px;
+            }
+
+            .service-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .service-card .price {
+                font-size: 1.1rem;
+            }
+
+            .service-card li {
+                font-size: 0.95rem;
+                padding: 0.4rem 0;
+            }
+
+            .note {
+                font-size: 1rem;
+                margin-top: 2rem;
+            }
+
+            .schedule {
+                padding: 4rem 6vw;
+            }
+
+            .schedule-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .schedule h2 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+
+            .calendar-embed {
+                padding: 1rem;
+                min-height: 600px;
+            }
+
+            .calendar-embed iframe {
+                height: 600px;
+            }
+
+            .about {
+                padding: 4rem 6vw;
+            }
+
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-image {
+                order: -1;
+                height: 250px;
+            }
+
+            .about-content h2 {
+                font-size: 2rem;
+                text-align: center;
+            }
+
+            .about-content p {
+                font-size: 1rem;
+                text-align: center;
+            }
+
+            .map-container {
+                height: 300px;
+                margin-top: 2rem;
+            }
+
+            footer {
+                padding: 3rem 6vw;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-section p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                padding: 0.5rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+                line-height: 1.3;
+            }
+
+            .hero .location {
+                font-size: 0.9rem;
+            }
+
+            .services h2 {
+                font-size: 1.75rem;
+            }
+
+            .service-icon {
+                width: 180px;
+                height: 180px;
+            }
+
+            .service-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .service-card li {
+                font-size: 0.9rem;
+            }
+
+            .schedule h2 {
+                font-size: 1.75rem;
+            }
+
+            .about-content h2 {
+                font-size: 1.75rem;
+            }
+
+            .footer-section h3 {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        section {
+            scroll-margin-top: 80px;
+        }
+
+        /* Improve text readability on mobile */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+        }
+
+        /* Smooth transitions */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Better touch targets */
+        a, button {
+            min-height: 44px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="/" class="logo">Go Performance</a>
+        <a href="#schedule" class="cta-button">Book now</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>CYCLING Services<br>FOR PEAK PERFORMANCE</h1>
+            <div class="location">
+                PRINCETON, TX<br>
+                BRIDGEWATER COMMUNITY
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="services-grid">
+            <!-- Annual Tune -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <img src="https://images.squarespace-cdn.com/content/v1/68ededfb9c81b824c1975681/15adc3f0-03d4-4441-9096-18ae095212a5/wheel.png" alt="Annual Tune">
+                </div>
+                <h3>Annual Tune</h3>
+                <div class="price">$99.00</div>
+                <ul>
+                    <li>Inspect all aspects of the bike</li>
+                    <li>Check and lube gears</li>
+                    <li>Check and adjust brakes (toe-in + cable tension)</li>
+                    <li>Wipe down and inspect frame</li>
+                    <li>Check and adjust tire pressure</li>
+                    <li><strong>Adjust</strong> front & rear derailleurs (incl. hanger check/alignment if needed)</li>
+                    <li>Perform test ride</li>
+                </ul>
+            </div>
+
+            <!-- New Bike Performance Tune -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <img src="https://images.squarespace-cdn.com/content/v1/68ededfb9c81b824c1975681/675d5d51-5a64-4dca-93c6-14b27fa06624/ChatGPT+Image+Oct+14%2C+2025%2C+03_33_32+AM.png" alt="Performance Tune">
+                </div>
+                <h3>New Bike Performance Tune</h3>
+                <div class="price">$199.00</div>
+                <ul>
+                    <li>Includes <strong>everything in Annual</strong></li>
+                    <li>Replace <strong>brake cables & housing</strong> (rim/mechanical)</li>
+                    <li>Replace <strong>shift cables & housing</strong></li>
+                    <li>Deep clean: foaming wash + <strong>drivetrain degrease</strong></li>
+                    <li><strong>True wheels (lateral)</strong></li>
+                    <li><strong>Tube replacement</strong> if needed</li>
+                    <li><strong>Brake pad replacement</strong> if needed</li>
+                    <li><strong>Chain replacement</strong> if needed (size, install, lube)</li>
+                    <li>Final test ride & shift/brake re-index</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="note">
+            <p><strong>NOTE:</strong></p>
+            <p><span class="underline">Multi-bike discounts available</span><br>
+            <span class="underline">Parts charged at cost</span><br>
+            (i.e. brake pads, chain, tubes)</p>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section id="schedule" class="schedule">
+        <div class="schedule-container">
+            <div>
+                <h2>Schedule<br>your<br>appointment</h2>
+            </div>
+            <div class="calendar-embed">
+                <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0InAa-4htazMus4foNmC95c2Cd6J77NoscmWr6vZ9y26dYDpgQRchpIiTFl90uSkAQm3ecqn5j?gv=true" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="about-container">
+            <div class="about-image">
+                <img src="https://images.squarespace-cdn.com/content/v1/68ededfb9c81b824c1975681/1726084290.704087-GPMQPKDUKHXBZOFBMPIE/imgg-od3-royh_4sz.png" alt="Cycling">
+            </div>
+            <div class="about-content">
+                <h2>About<br><span class="accent">Go<br>Performance</span></h2>
+                <p>At the heart of our mission is a love for the ride.</p>
+                <p>I started Go Performance to make high-level care accessible to everyday cyclists without the premium price tag.</p>
+                <p>PS: If you're interested in joining me for a 100-miler, let me know!</p>
+
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps?q=33.0944964,-96.5031368&z=14&output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Go Performance – Wyndemere Lane, TX 75407"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LOCATION</h3>
+                <p>Wyndemere Ln (Bridgewater Community)<br>
+                Princeton, TX 75407</p>
+            </div>
+            <div class="footer-section">
+                <h3>CONTACT</h3>
+                <p>Brandon Sayers (Owner & Tech)<br>
+                <a href="tel:+19077503005">(907) 750-3005</a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
