@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Performance - Cycling Services for Peak Performance</title>
+    <title>Go Performance Cycling Services</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/images/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="assets/icons/helmet-icon-512.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="assets/icons/helmet-icon-512.png">
+
     <style>
         * {
             margin: 0;
@@ -93,7 +97,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                        url('https://images.squarespace-cdn.com/content/v1/68ededfb9c81b824c1975681/1726084289.434838-ZLRCAFYTZQQTYZEVAYID/imgg-od3-jfyfarod.png');
+                        url('assets/images/hero.png');
             background-size: cover;
             background-position: 62% 61%;
         }
@@ -486,6 +490,8 @@
             .about-content p {
                 font-size: 1rem;
                 text-align: center;
+                margin-bottom: 0.5rem;
+                line-height: 1.6;
             }
 
             .map-container {
@@ -586,6 +592,23 @@
             align-items: center;
             justify-content: center;
         }
+        
+        /* Fix bullet formatting in Services section on mobile */
+        @media (max-width: 768px) {
+        .service-card ul {
+            list-style: disc inside;
+            padding-left: 1rem;
+        }
+
+        .service-card li {
+            position: static;
+            padding-left: 0;
+        }
+
+        .service-card li::before {
+            content: none; /* remove custom positioned bullet */
+        }
+        }
     </style>
 </head>
 <body>
@@ -614,7 +637,7 @@
             <!-- Annual Tune -->
             <div class="service-card">
                 <div class="service-icon">
-                    <img src="https://images.squarespace-cdn.com/content/v1/68ededfb9c81b824c1975681/15adc3f0-03d4-4441-9096-18ae095212a5/wheel.png" alt="Annual Tune">
+                    <img src="assets/images/wheel.webp" alt="Annual Tune">
                 </div>
                 <h3>Annual Tune</h3>
                 <div class="price">$99.00</div>
@@ -632,7 +655,7 @@
             <!-- New Bike Performance Tune -->
             <div class="service-card">
                 <div class="service-icon">
-                    <img src="https://images.squarespace-cdn.com/content/v1/68ededfb9c81b824c1975681/675d5d51-5a64-4dca-93c6-14b27fa06624/ChatGPT+Image+Oct+14%2C+2025%2C+03_33_32+AM.png" alt="Performance Tune">
+                    <img src="assets/images/bench.webp" alt="New Bike Performance Tune">
                 </div>
                 <h3>New Bike Performance Tune</h3>
                 <div class="price">$199.00</div>
@@ -674,10 +697,10 @@
     <section id="about" class="about">
         <div class="about-container">
             <div class="about-image">
-                <img src="https://images.squarespace-cdn.com/content/v1/68ededfb9c81b824c1975681/1726084290.704087-GPMQPKDUKHXBZOFBMPIE/imgg-od3-royh_4sz.png" alt="Cycling">
+                <img src="assets/images/helmet.webp" alt="cycling helmet">
             </div>
             <div class="about-content">
-                <h2>About<br><span class="accent">Go<br>Performance</span></h2>
+                <h2>About<br><span class="accent">Go Performance</span></h2>
                 <p>At the heart of our mission is a love for the ride.</p>
                 <p>I started Go Performance to make high-level care accessible to everyday cyclists without the premium price tag.</p>
                 <p>PS: If you're interested in joining me for a 100-miler, let me know!</p>

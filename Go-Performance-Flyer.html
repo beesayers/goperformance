@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Go Performance — Quadrant Flyer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #1a1a1a;
+      --accent-color: rgb(255, 94, 26);
+      --light-bg: #f5f5f5;
+      --text-color: #333;
+      --light-text: #ffffff;
+    }
+
+    @page {
+      size: Letter;
+      margin: 0.5in;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Space Grotesk', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--text-color);
+      background: white;
+    }
+
+    .flyer {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 0.25in;
+    }
+
+    /* Header */
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 0.25in;
+      padding-top: 0.1in;
+      border-bottom: 4px solid var(--accent-color);
+      padding-bottom: 0.15in;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.2in;
+    }
+    .brand img {
+      width: 0.7in; height: 0.7in; object-fit: contain; border-radius: 12px;
+    }
+    .brand .name {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 32px;
+      text-transform: uppercase;
+      color: var(--accent-color);
+      line-height: 1;
+    }
+    .headline {
+      text-align: right;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 26px;
+      line-height: 1.1;
+      text-transform: uppercase;
+      color: var(--primary-color);
+    }
+        /* Quadrants */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 0.25in;
+      height: 90%; /* reduced by 10% */
+      transform: scale(0.95);
+      transform-origin: top center;
+    }
+    .panel {
+      border-radius: 16px;
+      padding: 0.25in;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+    .panel h2, .panel h3 {
+      font-family: 'Archivo Black', sans-serif;
+      margin: 0 0 0.08in 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .panel h2 { font-size: 20px; }
+    .panel h3 { font-size: 18px; text-transform: none; }
+
+    .price { color: var(--accent-color); font-weight: 700; margin-left: 0.1em; }
+    ul { margin: 0.05in 0 0 0; padding-left: 1.1em; }
+    li { margin: 0.04in 0; line-height: 1.35; }
+
+    .about p { margin: 0 0 0.08in 0; line-height: 1.5; font-size: 11.5pt; }
+
+    .contact {
+      background: var(--accent-color);
+      color: white;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+    .contact h2 { color: white; }
+    .contact .info { font-size: 12.5pt; line-height: 1.6; margin-top: 0.1in; }
+    .contact a { color: #fff; font-weight: 700; text-decoration: none; }
+    .badge { margin-top: auto; background: rgba(255,255,255,0.15); padding: 0.12in; border-radius: 12px; text-align: center; font-weight: 700; }
+    .muted { opacity: 0.9; }
+
+    /* Print */
+    @media print {
+      .brand img { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    /* Screen fallback */
+    @media (max-width: 900px) {
+      .flyer { width: 100%; padding: 0 0.25in; }
+      .grid { grid-template-columns: 1fr; grid-template-rows: auto; transform: none; height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="flyer">
+    <div class="header">
+      <div class="brand">
+        <img src='assets/images/helmet-icon-1024.png' alt='Helmet icon'>
+        <div class="name">Go Performance</div>
+      </div>
+      <div class="headline">Cycling Services for Peak Performance</div>
+    </div>
+
+    <div class="grid">
+      <!-- Top-left: Service 1 -->
+      <div class="panel">
+        <h2>Annual Tune <span class="price">$99</span></h2>
+        <ul>
+          <li>Inspect all aspects of the bike</li>
+          <li>Check &amp; lube gears</li>
+          <li>Check &amp; adjust brakes (toe-in + cable tension)</li>
+          <li>Wipe down &amp; inspect frame</li>
+          <li>Check &amp; adjust tire pressure</li>
+          <li>Adjust derailleurs (incl. hanger alignment if needed)</li>
+          <li>Test ride</li>
+        </ul>
+      </div>
+
+      <!-- Top-right: Service 2 -->
+      <div class="panel">
+        <h2>New Bike Feel Tune <span class="price">$199</span></h2>
+        <ul>
+          <li>Everything in <strong>Annual Tune</strong></li>
+          <li>Replace brake cables &amp; housing (rim/mech)</li>
+          <li>Replace shift cables &amp; housing</li>
+          <li>Deep clean: foaming wash + drivetrain degrease</li>
+          <li>True wheels (lateral)</li>
+          <li>Tube / brake pad / chain replacement if needed</li>
+          <li>Final test ride &amp; re-index</li>
+        </ul>
+        <div class="badge muted">Multi-bike Discounts • Parts at Cost</div>
+      </div>
+
+      <!-- Bottom-left: About -->
+      <div class="panel about">
+        <h2>About Us</h2>
+        <p>At the heart of our mission is a love for the ride.</p>
+        <p>I started Go Performance to make high-level care accessible to everyday cyclists without the premium price tag.</p>
+        <p>PS: If you're interested in joining me for a 100-miler, let me know!</p>
+        <div style="margin-top: auto; font-weight:700;">Princeton, TX — Bridgewater Community</div>
+      </div>
+
+      <!-- Bottom-right: Contact -->
+      <div class="panel contact">
+        <h2>Contact</h2>
+        <div class="info">
+          <div><strong>Limited availability:</strong> Sat, Sun, Mon, Tues</div>
+          <div>Book: <a href="https://goperformance.org">goperformance.org</a></div>
+          <div>Call Brandon: <a href="tel:+19077503005">(907) 750‑3005</a></div>
+        </div>
+        <div class="badge">Fast Turnaround • Quality Work</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
