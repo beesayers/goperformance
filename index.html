@@ -60,6 +60,12 @@
             white-space: nowrap;
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
         .cta-button {
             background: var(--accent-color);
             color: white;
@@ -71,7 +77,9 @@
             text-transform: uppercase;
             transition: all 0.3s ease;
             white-space: nowrap;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .cta-button:hover {
@@ -379,16 +387,20 @@
         /* Responsive */
         @media (max-width: 768px) {
             header {
-                padding: 1rem 6vw;
+                padding: 1rem 4vw;
             }
 
             .logo {
-                font-size: 1.2rem;
+                font-size: 1rem;
+            }
+
+            .header-actions {
+                gap: 0.4rem;
             }
 
             .cta-button {
-                padding: 0.6rem 1.5rem;
-                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
             }
 
             .hero {
@@ -517,13 +529,21 @@
 
         /* Extra small screens */
         @media (max-width: 480px) {
+            header {
+                padding: 1rem 3vw;
+            }
+
             .logo {
-                font-size: 1rem;
+                font-size: 0.75rem;
+            }
+
+            .header-actions {
+                gap: 0.3rem;
             }
 
             .cta-button {
-                padding: 0.5rem 1.2rem;
-                font-size: 0.85rem;
+                padding: 0.4rem 0.7rem;
+                font-size: 0.65rem;
             }
 
             .hero h1 {
@@ -617,7 +637,10 @@
     <!-- Header -->
     <header>
         <a href="/" class="logo">Go Performance</a>
-        <a href="#schedule" class="cta-button">Book now</a>
+        <div class="header-actions">
+            <a href="tel:+19077503005" class="cta-button">Call now</a>
+            <a href="#schedule" class="cta-button">Book now</a>
+        </div>
     </header>
 
     <!-- Hero Section -->
@@ -649,7 +672,7 @@
                     <li>Wipe and re-lubricate chain</li>
                     <li>Inflate tires to rated PSI</li>
                     <li>Tune brakes</li>
-                    <li>Tune front & rear derailleurs (bent hanger re-alignment not included)</li>
+                    <li>Tune front & rear derailleurs<br>(bent hanger re-alignment not included)</li>
                     <li>Perform test ride</li>
                 </ul>
             </div>
